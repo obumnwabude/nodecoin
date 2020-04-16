@@ -10,6 +10,8 @@ module.exports = async (req, res, next) => {
 	  return res.status(401).json({message: 'Provide a valid phoneNumber of the recipient'});
 	if (!(req.body.amount))
 	  return res.status(401).json({message: 'Provide the amount to be transferred'});
+	else if (isNaN(req.body.amount))
+		return res.status(401).json({message: 'Please provide a valid amount'});
 	if (!(req.body.transactionPin))
 	  return res.status(401).json({message: 'Provide your transactionPin'});
 

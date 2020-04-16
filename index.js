@@ -73,7 +73,7 @@ app.post('/createUser', (req, res) => {
     return res.status(401).json({message: 'Please provide a password'});
   else if (!(req.body.amount))
     return res.status(401).json({message: 'Please provide an amount'});
-  else if (req.body.amount < 0)
+  else if (!(req.body.amount) < 0 || isNaN(req.body.amount))
     return res.status(401).json({message: 'Please provide a valid amount'});
   else if (!(req.body.transactionPin))
     return res.status(401).json({message: 'Please provide a transactionPin'});
@@ -201,7 +201,7 @@ app.put('/updateUser/:id', auth, async(req, res) => {
   }
 
   // check if any amount passed is less than zero return if so
-  if (req.body.amount && req.body.amount < 0) {
+  if (req.body.amount && (req.body.amount < 0 || isNaN(req.body.amount))) {
     return res.status(401).json({
       message: 'Please provide a valid amount'
     });
