@@ -7,6 +7,7 @@ const morgan = require('morgan');
 const User = require('./models/user');
 const Logger = require('./models/logger');
 const auth = require('./middleware/auth');
+const transfer = require('./middleware/transfer');
 const port = process.env.PORT || 3000;
 
 // connect to mongodb
@@ -34,6 +35,21 @@ const logStream = {
 
 // morgan middleware for logging
 app.use(morgan(':method :url :status :response-time ms', {stream: logStream}));
+
+// gets all users 
+app.get('/', (req, res) => {
+  // get and return all users from database
+  User.find({}).then(users => {
+    users = users.map(user => {
+      return {
+        name: user.name,
+        email: user.email,
+        phoneNumber: user.phoneNumber
+      };
+    });
+    res.status(200).json({users: users});
+  }).catch(err => res.status(500).json(err));
+});
 
 // handle logs 
 app.get('/logs', (req, res) => {
@@ -247,19 +263,25 @@ app.delete('/deleteUser/:id', auth, (req, res) => {
     .catch(err => res.status(500).json(err));
 });
 
-// gets all users 
-app.get('/', (req, res) => {
-  // get and return all users from database
-  User.find({}).then(users => {
-    users = users.map(user => {
-      return {
-        name: user.name,
-        email: user.email,
-        phoneNumber: user.phoneNumber
-      };
-    });
-    res.status(200).json({users: users});
-  }).catch(err => res.status(500).json(err));
+// handle transferFunds 
+app.post('/transferFunds/:id', auth, transfer, (req, res) => {
+  // get sender and receiver from res.locals
+  const sender = res.locals.user;
+  const receiver = res.locals.receiverUser;
+
+  // CARRY OUT THE TRANSFER
+  // debit the sender 
+  sender.amount = sender.amount - Number(req.body.amount);
+  // credit the receiver
+  receiver.amount = receiver.amount + Number(req.body.amount);
+  // return
+  res.status(201).json({
+    message: 'Transfer Successful',
+    amount: Number(req.body.amount),
+    senderId: req.params.id,
+    senderPhoneNumber: sender.phoneNumber,
+    receiverPhoneNumber: receiver.phoneNumber
+  });
 });
 
 module.exports = app.listen(port);
