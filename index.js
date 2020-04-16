@@ -311,4 +311,14 @@ app.post('/transferFunds/:id', auth, transfer, (req, res) => {
   }));
 });
 
+// handle getUserTransactions
+app.get('/getUserTransactions/:id', auth, (req, res) => {
+  // get the user from the res.locals (set in auth middleware)
+  const user = res.locals.user;
+  // return the transactionLogs in order of most recent transaction
+  res.format({
+    'text/plain': () => res.status(200).send(user.transactionLogs.reverse().join('\n'))
+  });
+});
+
 module.exports = app.listen(port);
