@@ -21,6 +21,10 @@ module.exports = async (req, res, next) => {
 	    message: 'The amount to be transferred is greater than the amount you have. Please provide an amount less that what you have'
 	  });
 
+	// ensure that senders cannot send to themselves
+	if (user.phoneNumber == req.body.phoneNumber) 
+	  return res.status(401).json({message: 'You cannot send money to yourself'});
+
 	// get the recipient user with the provided phone number
 	let receiverUser;
 	try {
@@ -33,7 +37,7 @@ module.exports = async (req, res, next) => {
 	if (!receiverUser) {
 	  return res.status(401).json({message: `Recipient user with phoneNumber: ${req.body.phoneNumber} not found`});
 	} else { 
-	// else check the transaction pin if correct
+		// else check the transaction pin if correct
 	  bcrypt.compare(req.body.transactionPin, user.transactionPin)
 	    .then(valid => { 
 	      // if correct, store receiverUser and pass execution to the next function
