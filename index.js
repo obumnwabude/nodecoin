@@ -2,11 +2,14 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const morgan = require('morgan');
+const ipWhitelist = require('ip-whitelist');
 const Logger = require('./models/logger');
 const indexRoutes = require('./routes/index');
 const userRoutes = require('./routes/user');
 const transactionRoutes = require('./routes/transaction');
 const port = process.env.PORT || 3000;
+
+app.use(ipWhitelist(ipWhitelist.array(['127.0.0.1', '::1'])));
 
 // connect to mongodb
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/ecxbackend-nodecoin', 
