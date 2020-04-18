@@ -72,7 +72,6 @@ module.exports = async (req, res, next) => {
             } 
           }).catch(err => res.status(500).json(err));
       } else {
-        console.log('entered else')
         throw new Error('Invalid Request');
       }
     } catch(error) {

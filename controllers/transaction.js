@@ -13,18 +13,21 @@ exports.transferFunds = (req, res, next) => {
   receiver.amount = receiver.amount + Number(req.body.amount);
 
   // CREATE TRANSFER DETAILS 
+  let detail = {
+    amount: Number(req.body.amount),
+    sender: sender.phoneNumber,
+    receiver: receiver.phoneNumber,
+    date: dateTime.getDate(),
+    time: dateTime.getTime()
+  };
   // create detail for sender
-  const senderDetail = `DEBIT senderPhoneNumber(me):${sender.phoneNumber} ` + 
-    `receiverPhoneNumber:${receiver.phoneNumber} amount:${Number(req.body.amount)} ` + 
-    `date:${dateTime.getDate()} time:${dateTime.getTime()}`;
+  detail.type = 'DEBIT';
   // add to its transactionLogs
-  sender.transactionLogs.push(senderDetail);
+  sender.transactionLogs.push(detail);
   // create detail for receiver
-  const receiverDetail = `CREDIT senderPhoneNumber:${sender.phoneNumber} ` + 
-    `receiverPhoneNumber(me):${receiver.phoneNumber} amount:${Number(req.body.amount)} ` + 
-    `date:${dateTime.getDate()} time:${dateTime.getTime()}`;
+  detail.type = 'CREDIT';
   // add to its transactionLogs
-  receiver.transactionLogs.push(receiverDetail);
+  receiver.transactionLogs.push(detail);
 
   // save sender and receiver changes and return
   sender.save().then(updatedSender => {
