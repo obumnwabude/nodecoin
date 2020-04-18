@@ -17,14 +17,8 @@ exports.getUser = (req, res, next) => {
   });
 };
 
-exports.getUserTransactions = (req, res, next) => {
-  // get the user from the res.locals (set in auth middleware)
-  const user = res.locals.user;
-  // return the transactionLogs in order of most recent transaction
-  res.format({
-    'text/plain': () => res.status(200).send(user.transactionLogs.reverse().join('\n'))
-  });
-};
+exports.getUserTransactions = (req, res, next) => 
+  res.status(200).json({transactions: res.locals.user.transactionLogs});
 
 exports.createUser = (req, res, next) => {
   // ensures that name, email, phoneNumber, password, amount and transactionPin are provided 
