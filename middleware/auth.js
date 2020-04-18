@@ -13,9 +13,9 @@ module.exports = async (req, res, next) => {
     return res.status(500).json(error);
   }
 
-  // check if there's a valid user with the provided email was not returned from the database
+  // check if there's a valid user with the provided phoneNumber was not returned from the database
   if (!user) {
-    // if so return message that user with specified email was not found
+    // if so return message that user with specified phoneNumber was not found
     return res.status(400).json({message: `User with _id: ${req.params.id}, not found!`});
   } else { 
     // if there's a user, check the authorization for token matching

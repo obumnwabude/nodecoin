@@ -3,8 +3,8 @@ const dateTime = require('../date-time');
 
 exports.transferFunds = (req, res, next) => {
   // get sender and receiver from res.locals
-  const sender = res.locals.user;
-  const receiver = res.locals.receiverUser;
+  const sender = res.locals.sender;
+  const receiver = res.locals.receiver;
 
   // CARRY OUT THE TRANSFER
   // debit the sender 
@@ -33,7 +33,6 @@ exports.transferFunds = (req, res, next) => {
       return res.status(201).json({
         message: 'Transfer Successful',
         amount: Number(req.body.amount),
-        senderId: req.params.id,
         senderPhoneNumber: updatedSender.phoneNumber,
         receiverPhoneNumber: updatedReceiver.phoneNumber
       });
@@ -42,7 +41,7 @@ exports.transferFunds = (req, res, next) => {
       error: err
     }));
   }).catch(err => res.status(500).json({
-    message: 'Error occured at saving sender',
+    message: 'Error occured at saving receiver',
     error: err
   }));
 };
