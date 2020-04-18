@@ -1,4 +1,4 @@
-# Nodecoin I
+# Nodecoin II
 
 The backend of a simple wallet app
 
