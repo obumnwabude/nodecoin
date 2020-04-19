@@ -9,7 +9,7 @@ const userRoutes = require('./routes/user');
 const transactionRoutes = require('./routes/transaction');
 const port = process.env.PORT || 3000;
 
-m// app.use(ipWhitelist(ipWhitelist.array(['127.0.0.1', '::1'])));
+// app.use(ipWhitelist(ipWhitelist.array(['127.0.0.1', '::1'])));
 
 // connect to mongodb
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/ecxbackend-nodecoin', 
